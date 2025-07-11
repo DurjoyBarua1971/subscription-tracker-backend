@@ -1,68 +1,34 @@
 import { Router } from "express";
+import authorize from "../middleware/auth.middleware.js";
+import { 
+  createSubscription, 
+  getUserSubscriptions,
+  getAllSubscriptions,
+  getSubscriptionById,
+  updateSubscription,
+  deleteSubscription,
+  cancelSubscription,
+  getUpcomingRenewals
+} from "../controllers/subscription.controller.js";
 
 const SubscriptionRouter = Router();
 
-SubscriptionRouter.get("/", (req, res) => {
-  res.send({
-    title: "Subscriptions",
-    message: "Get all subscriptions",
-  });
-});
+SubscriptionRouter.use(authorize);
 
-SubscriptionRouter.get("/:id", (req, res) => {
-  const { id } = req.params;  
-  res.send({
-    title: "Subscription Details",
-    message: `Get subscription with ID ${id}`,
-  }); 
-});
+SubscriptionRouter.get("/", getAllSubscriptions);
 
-SubscriptionRouter.post("/", (req, res) => {
-  res.send({
-    title: "Create Subscription",
-    message: "Subscription created successfully",
-  });
-});
+SubscriptionRouter.get("/upcoming-renewals", getUpcomingRenewals);
 
-SubscriptionRouter.put("/:id", (req, res) => {
-  const { id } = req.params;
-  res.send({
-    title: "Update Subscription",
-    message: `Subscription with ID ${id} updated successfully`,
-  }); 
-});
+SubscriptionRouter.get("/:id", getSubscriptionById);
 
-SubscriptionRouter.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  res.send({
-    title: "Delete Subscription",
-    message: `Subscription with ID ${id} deleted successfully`,
-  });
-});
+SubscriptionRouter.post("/", createSubscription);
 
+SubscriptionRouter.put("/:id", updateSubscription);
 
-SubscriptionRouter.get("/user/:userId", (req, res) => {
-  const { userId } = req.params;
-  res.send({
-    title: "User Subscriptions",
-    message: `Get all subscriptions for user with ID ${userId}`,
-  });
-});
+SubscriptionRouter.delete("/:id", deleteSubscription);
 
-SubscriptionRouter.put('/:id/cancel', (req, res) => {
-  const { id } = req.params;
-  res.send({
-    title: "Cancel Subscription",
-    message: `Subscription with ID ${id} has been cancelled successfully`,
-  });
-})
+SubscriptionRouter.get("/user/:id", getUserSubscriptions);
 
-SubscriptionRouter.get('/upcoming-renewals', (req, res) => {
-  res.send({
-    title: "Upcoming Renewals",
-    message: "Get all subscriptions with upcoming renewals",
-  });
-})
-
+SubscriptionRouter.put("/:id/cancel", cancelSubscription);
 
 export default SubscriptionRouter;

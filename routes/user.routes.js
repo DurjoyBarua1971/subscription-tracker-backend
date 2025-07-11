@@ -1,45 +1,20 @@
 import { Router } from "express";
+import { getUser, getUsers, createUser, updateUser, deleteUser } from "../controllers/user.controller.js";
+import authorize from "../middleware/auth.middleware.js";
 
 const userRouter = Router();
 
-userRouter.get("/", (req, res) => {
-  res.send({
-    title: "User Profiles",
-    message: "Get all users",
-  });
-});
+userRouter.use(authorize); // Apply authorization middleware to all routes in this router
 
-userRouter.get("/:id", (req, res) => {
-  const { id } = req.params;
-  res.send({
-    title: "User Profile",
-    message: `Get user with ID ${id}`,
-  });
-});
+userRouter.get("/", getUsers);
 
-userRouter.post("/", (req, res) => {
-  res.send({
-    title: "Create User",
-    message: "User created successfully",
-  });
-});
+userRouter.get("/:id", getUser);
 
-// put is used to update an existing resource
-// patch is used to update a part of an existing resource
-userRouter.put("/:id", (req, res) => {
-  const { id } = req.params;
-  res.send({
-    title: "Update User",
-    message: `User with ID ${id} updated successfully`,
-  });
-});
+userRouter.post("/", createUser);
 
-userRouter.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  res.send({
-    title: "Delete User",
-    message: `User with ID ${id} deleted successfully`,
-  });
-});
+userRouter.put("/:id", updateUser);
+
+userRouter.delete("/:id", deleteUser);
 
 export default userRouter;
+
